@@ -95,7 +95,7 @@ def generate_images(model, num_images, folder_path):
             generated_image.save(os.path.join(folder_path, f"generated_image_{i+1}.png"))
 
 # Parameters
-LATENT_DIM = 3  # Update this if your latent dimension is different
+LATENT_DIM = 16  # Update this if your latent dimension is different
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Load the trained model
