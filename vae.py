@@ -25,7 +25,6 @@ class VariationalAutoencoder(nn.Module):
             nn.ReLU(),
             nn.Conv2d(128, 256, kernel_size=4, stride=2, padding=1),
             nn.ReLU(),
-            nn.Flatten(),
             nn.Linear(256 * 16 * 16, 1024),
             nn.ReLU()
         )
