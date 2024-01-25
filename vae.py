@@ -153,7 +153,7 @@ else:
 
 # Loss and optimizer
 #optimizer = optim.Adadelta(model.parameters(), lr=0.00001, betas=(0.9, 0.999), eps=1e-8, weight_decay=0.00, amsgrad=False)
-optimizer = optim.SGD(model.parameters(), lr=0.00001, momentum=0.9)
+optimizer = optim.SGD(model.parameters(), lr=0.0001, momentum=0.9)
 
 
 # Train the model
@@ -195,7 +195,7 @@ for epoch in range(num_epochs):
     with open('model_history.txt', 'a') as file:
         file.write(f'Epoch: {epoch}, Avg_Total_Loss: {avg_total_loss:.6f}, Avg_BCE_Loss: {avg_bce_loss:.6f}, Avg_KLD_Loss: {avg_kld_loss:.6f}, Test_MSE_Loss: {avg_mse_test:.6f} \n')
     
-    if epoch % 25 == 0:
+    if (epoch % 25 == 0 and epoch > 24):
         torch.save(model.state_dict(), f'variational_autoencoder.pth')
         print("Model Saved at Epoch: ", epoch)
 
