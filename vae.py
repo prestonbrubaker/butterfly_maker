@@ -127,7 +127,7 @@ transform = transforms.Compose([
 dataset = CustomDataset(folder_path='photos_2', transform=transform)
 
 # Dataset and Dataloader
-dataloader = DataLoader(dataset, batch_size=900, shuffle=True)
+dataloader = DataLoader(dataset, batch_size=200, shuffle=True)
 
 
 # Dataset and Dataloader for test data
