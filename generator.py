@@ -7,7 +7,7 @@ from PIL import Image
 import os
 
 # Model Parameters
-latent_dim = 16  # Example latent space dimension
+latent_dim = 32  # Example latent space dimension
 LATENT_DIM = latent_dim
 
 class VariationalAutoencoder(nn.Module):
@@ -17,16 +17,16 @@ class VariationalAutoencoder(nn.Module):
 
        # Encoder
         self.encoder = nn.Sequential(
-            nn.Conv2d(3, 32, kernel_size=4, stride=2, padding=1),  # Output: 32x128x128
+            nn.Conv2d(3, 64, kernel_size=4, stride=2, padding=1),  # Output: 32x128x128
             nn.ReLU(),
-            nn.Conv2d(32, 32, kernel_size=4, stride=2, padding=1),  # Output: 64x64x64
+            nn.Conv2d(64, 64, kernel_size=4, stride=2, padding=1),  # Output: 64x64x64
             nn.ReLU(),
-            nn.Conv2d(32, 32, kernel_size=4, stride=2, padding=1),  # Output: 128x32x32
+            nn.Conv2d(64, 64, kernel_size=4, stride=2, padding=1),  # Output: 128x32x32
             nn.ReLU(),
-            nn.Conv2d(32, 32, kernel_size=4, stride=2, padding=1),  # Output: 256x16x16
+            nn.Conv2d(64, 64, kernel_size=4, stride=2, padding=1),  # Output: 256x16x16
             nn.ReLU(),
             nn.Flatten(),  # Flatten for linear layer input
-            nn.Linear(32*16*16, 1024),
+            nn.Linear(64*16*16, 1024),
             nn.ReLU()
         )
 
@@ -37,16 +37,16 @@ class VariationalAutoencoder(nn.Module):
         self.decoder_input = nn.Linear(latent_dim, 1024)
 
         self.decoder = nn.Sequential(
-            nn.Linear(1024, 32*16*16),
+            nn.Linear(1024, 64*16*16),
             nn.ReLU(),
-            nn.Unflatten(1, (32, 16, 16)),  # Unflatten to 256x16x16 for conv transpose input
-            nn.ConvTranspose2d(32, 32, kernel_size=4, stride=2, padding=1),  # Output: 128x32x32
+            nn.Unflatten(1, (64, 16, 16)),  # Unflatten to 256x16x16 for conv transpose input
+            nn.ConvTranspose2d(64, 64, kernel_size=4, stride=2, padding=1),  # Output: 128x32x32
             nn.ReLU(),
-            nn.ConvTranspose2d(32, 32, kernel_size=4, stride=2, padding=1),  # Output: 64x64x64
+            nn.ConvTranspose2d(64, 64, kernel_size=4, stride=2, padding=1),  # Output: 64x64x64
             nn.ReLU(),
-            nn.ConvTranspose2d(32, 32, kernel_size=4, stride=2, padding=1),  # Output: 32x128x128
+            nn.ConvTranspose2d(64, 64, kernel_size=4, stride=2, padding=1),  # Output: 32x128x128
             nn.ReLU(),
-            nn.ConvTranspose2d(32, 3, kernel_size=4, stride=2, padding=1),  # Output: 1x256x256
+            nn.ConvTranspose2d(64, 3, kernel_size=4, stride=2, padding=1),  # Output: 1x256x256
             nn.Sigmoid()
         )
 
