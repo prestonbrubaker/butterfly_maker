@@ -15,43 +15,38 @@ class VariationalAutoencoder(nn.Module):
         super(VariationalAutoencoder, self).__init__()
         self.latent_dim = latent_dim
 
-        # Encoder
+       # Encoder
         self.encoder = nn.Sequential(
-            nn.Conv2d(3, 32, kernel_size=4, stride=2, padding=1), 
+            nn.Conv2d(3, 3, kernel_size=4, stride=2, padding=1),  # Output: 32x128x128
             nn.ReLU(),
-            nn.Conv2d(32, 64, kernel_size=4, stride=2, padding=1),
+            nn.Conv2d(3, 3, kernel_size=4, stride=2, padding=1),  # Output: 64x64x64
             nn.ReLU(),
-            nn.Conv2d(64, 128, kernel_size=4, stride=2, padding=1),
+            nn.Conv2d(3, 3, kernel_size=4, stride=2, padding=1),  # Output: 128x32x32
             nn.ReLU(),
-            nn.Conv2d(128, 256, kernel_size=4, stride=2, padding=1),
+            nn.Conv2d(3, 3, kernel_size=4, stride=2, padding=1),  # Output: 256x16x16
             nn.ReLU(),
-            nn.Linear(256 * 16 * 16, 1024),
+            nn.Flatten(),  # Flatten for linear layer input
+            nn.Linear(3*16*16, 1024),
             nn.ReLU()
         )
 
-        # Decoder
-        with torch.no_grad():
-            dummy_input = torch.zeros(1, 3, 256, 256)  # Adjust size if needed
-            dummy_output = self.encoder(dummy_input)
-            # Assuming the output shape is (batch_size, channels, height, width)
-            _, C, H, W = dummy_output.shape
-            self.flat_features = C * H * W  # Correct calculation for the flattened size
+        self.fc_mu = nn.Linear(1024, latent_dim)
+        self.fc_log_var = nn.Linear(1024, latent_dim)
 
-        # Use 'self.flat_features' for the first Linear layer in Decoder
-        self.fc_mu = nn.Linear(self.flat_features, latent_dim)
-        self.fc_log_var = nn.Linear(self.flat_features, latent_dim)
+        # Decoder
+        self.decoder_input = nn.Linear(latent_dim, 1024)
 
         self.decoder = nn.Sequential(
-            nn.Linear(latent_dim, self.flat_features),
+            nn.Linear(1024, 3*16*16),
             nn.ReLU(),
-            nn.Unflatten(1, (256, 16, 16)),
-            nn.ConvTranspose2d(256, 128, kernel_size=4, stride=2, padding=1),
+            nn.Unflatten(1, (3, 16, 16)),  # Unflatten to 256x16x16 for conv transpose input
+            nn.ConvTranspose2d(3, 3, kernel_size=4, stride=2, padding=1),  # Output: 128x32x32
             nn.ReLU(),
-            nn.ConvTranspose2d(128, 64, kernel_size=4, stride=2, padding=1),
+            nn.ConvTranspose2d(3, 3, kernel_size=4, stride=2, padding=1),  # Output: 64x64x64
             nn.ReLU(),
-            nn.ConvTranspose2d(64, 32, kernel_size=4, stride=2, padding=1),
+            nn.ConvTranspose2d(3, 3, kernel_size=4, stride=2, padding=1),  # Output: 32x128x128
             nn.ReLU(),
-            nn.ConvTranspose2d(32, 3, kernel_size=4, stride=2, padding=1),  # Output: 3 channels for RGB
+            nn.ConvTranspose2d(3, 3, kernel_size=4, stride=2, padding=1),  # Output: 1x256x256
             nn.Sigmoid()
         )
 
@@ -67,7 +62,8 @@ class VariationalAutoencoder(nn.Module):
         return mu + eps * std
 
     def decode(self, z):
-        x = self.decoder(z)
+        x = self.decoder_input(z)
+        x = self.decoder(x)
         return x
 
     def forward(self, x):
