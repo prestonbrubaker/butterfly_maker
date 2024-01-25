@@ -32,16 +32,16 @@ class VariationalAutoencoder(nn.Module):
 
         # Decoder
         with torch.no_grad():
-            dummy_input = torch.zeros(1, 3, 256, 256)  # Assuming input image size is 256x256
+            dummy_input = torch.zeros(1, 3, 256, 256)  # Adjust size if needed
             dummy_output = self.encoder(dummy_input)
-            self.flat_features = dummy_output.view(-1).shape[0]
+            self.flat_features = dummy_output.numel()
 
         # Use 'self.flat_features' for the first Linear layer in Decoder
         self.fc_mu = nn.Linear(self.flat_features, latent_dim)
         self.fc_log_var = nn.Linear(self.flat_features, latent_dim)
 
         self.decoder = nn.Sequential(
-            nn.Linear(1024, 256 * 16 * 16),
+            nn.Linear(latent_dim, self.flat_features),
             nn.ReLU(),
             nn.Unflatten(1, (256, 16, 16)),
             nn.ConvTranspose2d(256, 128, kernel_size=4, stride=2, padding=1),
