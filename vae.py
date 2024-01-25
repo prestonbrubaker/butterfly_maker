@@ -130,7 +130,7 @@ transform = transforms.Compose([
 dataset = CustomDataset(folder_path='photos', transform=transform)
 
 # Dataset and Dataloader
-dataloader = DataLoader(dataset, batch_size=300, shuffle=True)
+dataloader = DataLoader(dataset, batch_size=100, shuffle=True)
 
 
 # Dataset and Dataloader for test data
@@ -152,7 +152,7 @@ else:
 
 
 # Loss and optimizer
-optimizer = optim.Adadelta(model.parameters(), lr=0.001, eps=1e-8, weight_decay=0.00)
+optimizer = optim.Adadelta(model.parameters(), lr=0.0005, eps=1e-8, weight_decay=0.00)
 #optimizer = optim.SGD(model.parameters(), lr=0.0001, momentum=0.9)
 
 
