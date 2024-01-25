@@ -7,7 +7,7 @@ from PIL import Image
 import os
 
 # Model Parameters
-latent_dim = 4  # Example latent space dimension
+latent_dim = 16  # Example latent space dimension
 LATENT_DIM = latent_dim
 
 class VariationalAutoencoder(nn.Module):
@@ -31,8 +31,14 @@ class VariationalAutoencoder(nn.Module):
         )
 
         # Decoder
-        self.fc_mu = nn.Linear(1024, latent_dim)
-        self.fc_log_var = nn.Linear(1024, latent_dim)
+        with torch.no_grad():
+            dummy_input = torch.zeros(1, 3, 256, 256)  # Assuming input image size is 256x256
+            dummy_output = self.encoder(dummy_input)
+            self.flat_features = dummy_output.view(-1).shape[0]
+
+        # Use 'self.flat_features' for the first Linear layer in Decoder
+        self.fc_mu = nn.Linear(self.flat_features, latent_dim)
+        self.fc_log_var = nn.Linear(self.flat_features, latent_dim)
 
         self.decoder = nn.Sequential(
             nn.Linear(1024, 256 * 16 * 16),
