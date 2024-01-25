@@ -34,7 +34,9 @@ class VariationalAutoencoder(nn.Module):
         with torch.no_grad():
             dummy_input = torch.zeros(1, 3, 256, 256)  # Adjust size if needed
             dummy_output = self.encoder(dummy_input)
-            self.flat_features = dummy_output.numel()
+            # Assuming the output shape is (batch_size, channels, height, width)
+            _, C, H, W = dummy_output.shape
+            self.flat_features = C * H * W  # Correct calculation for the flattened size
 
         # Use 'self.flat_features' for the first Linear layer in Decoder
         self.fc_mu = nn.Linear(self.flat_features, latent_dim)
