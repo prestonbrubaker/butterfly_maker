@@ -31,7 +31,8 @@ class VariationalAutoencoder(nn.Module):
         )
 
         # Decoder
-        self.decoder_input = nn.Linear(latent_dim, 1024)
+        self.fc_mu = nn.Linear(1024, latent_dim)
+        self.fc_log_var = nn.Linear(1024, latent_dim)
 
         self.decoder = nn.Sequential(
             nn.Linear(1024, 256 * 16 * 16),
