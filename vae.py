@@ -152,7 +152,7 @@ else:
 
 
 # Loss and optimizer
-optimizer = optim.Adadelta(model.parameters(), lr=0.0005, eps=1e-8, weight_decay=0.00)
+optimizer = optim.Adadelta(model.parameters(), lr=0.005, eps=1e-8, weight_decay=0.00)
 #optimizer = optim.SGD(model.parameters(), lr=0.0001, momentum=0.9)
 
 
@@ -180,7 +180,7 @@ for epoch in range(num_epochs):
         # Backward pass and optimize
         optimizer.zero_grad()
         loss.backward()
-        torch.nn.utils.clip_grad_value_(model.parameters(), clip_value=0.5)
+        #torch.nn.utils.clip_grad_value_(model.parameters(), clip_value=0.5)
         optimizer.step()
 
     # Average losses over the dataset
