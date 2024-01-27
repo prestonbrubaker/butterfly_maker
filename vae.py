@@ -7,7 +7,7 @@ from PIL import Image
 import os
 
 # Model Parameters
-latent_dim = 128  # Example latent space dimension
+latent_dim = 256  # Example latent space dimension
 LATENT_DIM = latent_dim
 
 class VariationalAutoencoder(nn.Module):
@@ -17,7 +17,7 @@ class VariationalAutoencoder(nn.Module):
 
        # Encoder
         self.encoder = nn.Sequential(
-            nn.Conv2d(3, 16, kernel_size=4, stride=2, padding=1),  # Output: 32x128x128
+            nn.Conv2d(3, 3, kernel_size=4, stride=2, padding=1),  # Output: 32x128x128
             nn.ReLU(),
             nn.Conv2d(16, 32, kernel_size=4, stride=2, padding=1),  # Output: 64x64x64
             nn.ReLU(),
@@ -152,8 +152,8 @@ else:
 
 
 # Loss and optimizer
-optimizer = optim.Adadelta(model.parameters(), lr=0.005, eps=1e-8, weight_decay=0.00)
-#optimizer = optim.SGD(model.parameters(), lr=0.0001, momentum=0.9)
+#optimizer = optim.Adadelta(model.parameters(), lr=0.005, eps=1e-8, weight_decay=0.00)
+optimizer = optim.SGD(model.parameters(), lr=0.0001, momentum=0.9)
 
 
 # Train the model
