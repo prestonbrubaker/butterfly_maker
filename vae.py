@@ -152,8 +152,8 @@ else:
 
 
 # Loss and optimizer
-#optimizer = optim.Adadelta(model.parameters(), lr=0.005, eps=1e-8, weight_decay=0.00)
-optimizer = optim.SGD(model.parameters(), lr=0.0001, momentum=0.9)
+optimizer = optim.Adadelta(model.parameters(), lr=0.005, eps=1e-8, weight_decay=0.00)
+#optimizer = optim.SGD(model.parameters(), lr=0.00001, momentum=0.9)
 
 
 # Train the model
