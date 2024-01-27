@@ -17,7 +17,7 @@ class VariationalAutoencoder(nn.Module):
 
        # Encoder
         self.encoder = nn.Sequential(
-            nn.Conv2d(3, 3, kernel_size=4, stride=2, padding=1),  # Output: 32x128x128
+            nn.Conv2d(3, 16, kernel_size=4, stride=2, padding=1),  # Output: 32x128x128
             nn.ReLU(),
             nn.Conv2d(16, 32, kernel_size=4, stride=2, padding=1),  # Output: 64x64x64
             nn.ReLU(),
